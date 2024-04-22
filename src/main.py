@@ -1,4 +1,8 @@
+from functools import lru_cache
+
 from fastapi import FastAPI
+
+from src.config.settings import Settings
 
 app = FastAPI(
     title="two factor API",
@@ -6,6 +10,11 @@ app = FastAPI(
     version="0.0.1",
 
 )
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings(_env_file='.env')
 
 
 @app.get("/")
