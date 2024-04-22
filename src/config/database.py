@@ -3,7 +3,11 @@ from sqlalchemy import exc as alchemy_exceptions
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-SQLALCHEMY_DATABASE_URL = "postgresql://{user}:{password}@{host}:{port}/{database}"
+from src.main import get_settings
+
+st = get_settings()
+
+SQLALCHEMY_DATABASE_URL = f"postgresql://{st.db_user}:{st.db_password}@{st.db_host}:{st.db_port}/{st.db_name}"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
