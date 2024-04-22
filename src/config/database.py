@@ -23,4 +23,5 @@ def get_db():
     except alchemy_exceptions.SQLAlchemyError as err:
         print("An exception occurred: {}".format(err))
         db.rollback()
+    finally:
         db.close()
