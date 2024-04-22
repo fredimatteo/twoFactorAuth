@@ -1,6 +1,7 @@
 from functools import lru_cache
 
 from fastapi import FastAPI
+from src.api import routers
 
 from src.config.settings import Settings
 
@@ -20,3 +21,6 @@ def get_settings() -> Settings:
 @app.get("/")
 def root():
     return {"message": "Hello coder!"}
+
+
+app.include_router(router=routers.main_router)
