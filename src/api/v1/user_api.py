@@ -13,6 +13,7 @@ def get_users():
             first_name="Test",
             last_name="User",
             email="<EMAIL>",
+            username="testuser",
         )
     ]
 

@@ -1,8 +1,8 @@
 from functools import lru_cache
 
 from fastapi import FastAPI
-from src.api import routers
 
+from src.api import routers
 from src.config.settings import Settings
 
 app = FastAPI(
