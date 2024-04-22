@@ -10,6 +10,15 @@ class UserSchema(BaseModel):
     salt: str
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
+class UserResponseSchema(BaseModel):
+    id: int | None = None
+    first_name: str
+    last_name: str
+    email: str
+    username: str
+
+    class Config:
+        from_attributes = True
