@@ -1,20 +1,14 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
+from sqlalchemy.orm import Session
 
-from src.schemas import user_schema
+from src.config import database
+from src.services import user as user_service
 
 router = APIRouter(prefix="/users", tags=["users"])
 
 
 @router.get("")
-def get_users():
-    users = [
-        user_schema.UserResponseSchema(
-            id=1,
-            first_name="Test",
-            last_name="User",
-            email="<EMAIL>",
-            username="testuser",
-        )
-    ]
+def get_users(db: Session = Depends(database.get_db)):
+    users = user_service.get_all_users(db)
 
     return users
