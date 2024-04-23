@@ -19,6 +19,19 @@ class UserResponseSchema(BaseModel):
     last_name: str
     email: str
     username: str
+    is_admin: bool
+    disabled: bool
+
+    class Config:
+        from_attributes = True
+
+
+class UserCreateSchema(BaseModel):
+    first_name: str
+    last_name: str
+    email: str
+    password: str
+    username: str
 
     class Config:
         from_attributes = True
