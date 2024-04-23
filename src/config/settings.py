@@ -1,3 +1,5 @@
+from functools import lru_cache
+
 from pydantic_settings import BaseSettings
 
 
@@ -7,3 +9,8 @@ class Settings(BaseSettings):
     db_user: str
     db_password: str
     db_host: str
+
+
+@lru_cache
+def get_settings() -> Settings:
+    return Settings(_env_file='./src/.env')
