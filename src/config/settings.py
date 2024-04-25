@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     db_password: str
     db_host: str
 
+    jwt_secret_key: str
+
 
 @lru_cache
 def get_settings() -> Settings:
