@@ -1,9 +1,25 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 
 class LoginRequest(BaseModel):
     username: str
     password: str
+
+    class Config:
+        from_attributes = True
+
+
+class LoginResponse(BaseModel):
+    otp_token: str
+    img: str
+
+    class Config:
+        from_attributes = True
+
+
+class OtpRequest(BaseModel):
+    otp_code: str
+    validation_token: str
 
     class Config:
         from_attributes = True
