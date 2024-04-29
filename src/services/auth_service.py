@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 
 from src.config import settings, exception
 from src.models import user_model
-from src.schemas.auth_schema import LoginRequest, TokenResponse
-from src.services import user as user_service
+from src.schemas.auth_schema import TokenResponse
+from src.services import user_service
 
 st = settings.get_settings()
 
@@ -20,7 +20,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 15
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def __authenticate(username: str, password: str, db: Session) -> user_model.User:
+def authenticate(username: str, password: str, db: Session) -> user_model.User:
     statement = select(user_model.User).where(user_model.User.username == username)
 
     result: user_model.User = db.execute(statement).scalar()
@@ -34,19 +34,16 @@ def __authenticate(username: str, password: str, db: Session) -> user_model.User
     return result
 
 
-def generate_token(src: LoginRequest, db: Session) -> TokenResponse:
-    user = __authenticate(src.username, src.password, db)
-    if user:
+def generate_token(src: user_model.User, db: Session) -> TokenResponse:
+    if src:
         access_token = create_access_token(
             {
-                "sub": user.username,
-                "is_admin": user.is_admin,
+                "sub": src.username,
+                "is_admin": src.is_admin,
             }
         )
 
         return TokenResponse(access_token=access_token, refresh_token="None", token_type="Bearer")
-
-    raise exception.InvalidCredentialsException("username")
 
 
 def decode_token(token: str, db: Session) -> user_model.User:

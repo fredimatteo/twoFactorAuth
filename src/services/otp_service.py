@@ -6,7 +6,7 @@ import qrcode
 from sqlalchemy.orm import Session
 
 from src.models import user_model
-from src.services import user as user_service
+from src.services import user_service
 
 
 def generate_qr_code(secret):

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.config import exception
 from src.models import user_model as u_model
 from src.schemas import user_schema as u_schema
-from src.services.auth import hash_password
+from src.services.auth_service import hash_password
 
 
 def get_all_users(db: Session, user: u_model.User, skip: int = 0, limit: int = 10):
