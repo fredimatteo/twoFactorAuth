@@ -108,23 +108,27 @@ form {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-label {
-    margin: 5px;
-    font-family: "Andale Mono", serif;
-    font-weight: bold;
+    align-content: center;
+    justify-content: center;
+    gap: 0.6rem;
 }
 
 input {
-    margin: 5px;
-    padding: 5px;
-    border: none;
+    margin: 7px;
+    padding: 10px;
     border-radius: 7px;
     font-family: "Andale Mono", serif;
     font-weight: bold;
+    font-size: calc(7px + 1vmin);
+    border: none;
 }
 
 button[type="submit"] {
     margin-top: 10px;
+}
+
+.Error-message {
+    color: red;
+    font-size: calc(7px + 1vmin);
+    margin: 0;
 }
