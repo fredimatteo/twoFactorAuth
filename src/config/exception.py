@@ -3,8 +3,11 @@ from fastapi.responses import JSONResponse
 
 
 class NotFoundException(Exception):
-    def __init__(self, item_reference: int | str):
-        self.item_reference = item_reference
+    def __init__(self, item_reference: int | str | None = None):
+        if item_reference is None:
+            self.message = "Item not found"
+        else:
+            self.message = f"Item {item_reference} not found"
 
 
 class InvalidCredentialsException(Exception):
@@ -15,7 +18,7 @@ class InvalidCredentialsException(Exception):
 def not_found_exception_handler(request: Request, exc: NotFoundException):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
-        content={"message": f"Item '{exc.item_reference}' not found."}
+        content={"message": exc.message}
     )
 
 
