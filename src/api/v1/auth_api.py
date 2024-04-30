@@ -32,6 +32,6 @@ def authenticate_by_otp(src: auth_schema.OtpRequest, db: Session = Depends(get_d
     db.commit()
 
     if user:
-        return generate_token(db=db, src=user)
+        return generate_token(src=user)
 
     raise HTTPException(status_code=400, detail="Invalid OTP")

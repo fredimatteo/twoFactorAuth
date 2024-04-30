@@ -15,6 +15,7 @@ class InvalidCredentialsException(Exception):
         self.credential_type = credential_type
 
 
+# pylint: disable=unused-argument
 def not_found_exception_handler(request: Request, exc: NotFoundException):
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
@@ -22,6 +23,7 @@ def not_found_exception_handler(request: Request, exc: NotFoundException):
     )
 
 
+# pylint: disable=unused-argument
 def invalid_credentials_exception_handler(request: Request, exc: InvalidCredentialsException):
     return JSONResponse(
         status_code=status.HTTP_401_UNAUTHORIZED,

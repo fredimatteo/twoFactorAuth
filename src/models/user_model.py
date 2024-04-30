@@ -7,7 +7,6 @@ from src.config.database import Base
 
 class User(Base):
     __tablename__ = 'user'
-  
     id = mapped_column(BigInteger)
     first_name = mapped_column(String(48), nullable=False)
     last_name = mapped_column(String(72), nullable=False)

@@ -34,16 +34,15 @@ def authenticate(username: str, password: str, db: Session) -> user_model.User:
     return result
 
 
-def generate_token(src: user_model.User, db: Session) -> TokenResponse:
-    if src:
-        access_token = create_access_token(
-            {
-                "sub": src.username,
-                "is_admin": src.is_admin,
-            }
-        )
+def generate_token(src: user_model.User) -> TokenResponse:
+    access_token = create_access_token(
+        {
+            "sub": src.username,
+            "is_admin": src.is_admin,
+        }
+    )
 
-        return TokenResponse(access_token=access_token, refresh_token="None", token_type="Bearer")
+    return TokenResponse(access_token=access_token, refresh_token="None", token_type="Bearer")
 
 
 def decode_token(token: str, db: Session) -> user_model.User:
