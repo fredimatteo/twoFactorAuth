@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import HandleGetUsers from './Users';
 
-function LoginForm() {
+function LoginForm({ onLoginSuccess }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [showErrorMessage, setErrorMessage] = useState(false);
@@ -25,8 +25,8 @@ function LoginForm() {
 
         login(username, password)
             .then(response => {
-                localStorage.setItem("access_token", response["access_token"]);
-                HandleGetUsers();
+                localStorage.setItem("otpToken", response["otp_token"]);
+                onLoginSuccess();
             })
             .catch(error => {
                 setErrorMessage(true);
@@ -49,7 +49,7 @@ function LoginForm() {
 
 async function login(username, password) {
     try {
-        const response = await fetch('http://127.0.0.1:8000/auth/token', {
+        const response = await fetch('http://127.0.0.1:8000/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

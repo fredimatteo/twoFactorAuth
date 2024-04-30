@@ -1,11 +1,14 @@
 import React, {useState} from 'react';
 import './App.css';
 import LoginForm from './custom_js/LoginForm';
+import OtpForm from "./custom_js/OtpForm";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [showSignupForm, setShowSignupForm] = useState(false);
     const [showHomeSection, setShowHomeSection] = useState(true);
+    const [showOtpSection, setOtpSection] = useState(false);
+
 
     const handleLoginClick = () => {
         setShowLoginForm(true);
@@ -19,6 +22,12 @@ function App() {
         setShowHomeSection(false);
     };
 
+    const handleLoginSuccess = () => {
+        console.log("pippo");
+        setShowLoginForm(false); // Nascondi il modulo di accesso
+        setOtpSection(true); // Mostra il modulo OTP
+    };
+
     return (
         <div className="App">
             <header className="App-header">
@@ -29,8 +38,9 @@ function App() {
                         <button onClick={handleSignupClick} className="Button-signup">Sign Up</button>
                     </div>
                 }
-                {showLoginForm && <LoginForm/>}
+                {showLoginForm && <LoginForm onLoginSuccess={handleLoginSuccess}/>}
                 {showSignupForm && <SignupForm/>}
+                {showOtpSection && <OtpForm/>}
             </header>
 
         </div>
