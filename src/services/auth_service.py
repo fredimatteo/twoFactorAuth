@@ -1,15 +1,14 @@
 from datetime import datetime, timedelta, timezone
 
-from fastapi import HTTPException
 from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from src.config import settings
+from src.config import settings, exception
 from src.models import user_model
-from src.schemas.auth_schema import LoginRequest, TokenResponse
-from src.services import user as user_service
+from src.schemas.auth_schema import TokenResponse
+from src.services import user_service
 
 st = settings.get_settings()
 
@@ -21,52 +20,42 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 15
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-def __authenticate(username: str, password: str, db: Session) -> user_model.User:
+def authenticate(username: str, password: str, db: Session) -> user_model.User:
     statement = select(user_model.User).where(user_model.User.username == username)
 
     result: user_model.User = db.execute(statement).scalar()
 
     if not result:
-        raise HTTPException(status_code=404, detail="Invalid username")
+        raise exception.InvalidCredentialsException("username")
 
     if not verify_password(password, result.password, result.salt):
-        raise HTTPException(status_code=401, detail="Invalid password")
+        raise exception.InvalidCredentialsException("password")
 
     return result
 
 
-def generate_token(src: LoginRequest, db: Session) -> TokenResponse:
-    user = __authenticate(src.username, src.password, db)
-    if user:
-        access_token = create_access_token(
-            {
-                "sub": user.username,
-                "is_admin": user.is_admin,
-            }
-        )
+def generate_token(src: user_model.User) -> TokenResponse:
+    access_token = create_access_token(
+        {
+            "sub": src.username,
+            "is_admin": src.is_admin,
+        }
+    )
 
-        return TokenResponse(access_token=access_token, refresh_token="None", token_type="Bearer")
-
-    raise HTTPException(status_code=401, detail="Incorrect username")
+    return TokenResponse(access_token=access_token, refresh_token="None", token_type="Bearer")
 
 
 def decode_token(token: str, db: Session) -> user_model.User:
-    CREDENTIALS_EXCEPTION = HTTPException(
-                status_code=401,
-                detail="Could not validate credentials",
-                headers={"WWW-Authenticate": "Bearer"},
-            )
-
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         username: str = payload.get("sub")
         if username is None:
-            raise CREDENTIALS_EXCEPTION
+            raise exception.InvalidCredentialsException("username")
     except JWTError:
-        raise CREDENTIALS_EXCEPTION
+        raise exception.InvalidCredentialsException("username")
     user = user_service.get_user_by_username(db, username)
     if user is None:
-        raise CREDENTIALS_EXCEPTION
+        raise exception.InvalidCredentialsException("username")
     return user
 
 

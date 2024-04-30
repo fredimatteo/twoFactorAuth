@@ -20,8 +20,7 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
-    except alchemy_exceptions.DatabaseError as err:
-        print("An exception occurred: {}".format(err))
+    except alchemy_exceptions.DatabaseError:
         db.rollback()
     finally:
         db.close()
