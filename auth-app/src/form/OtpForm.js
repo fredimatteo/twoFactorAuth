@@ -3,7 +3,7 @@
 import React, {useState} from 'react';
 import HandleGetUsers from '../view/Users';
 
-function OtpForm() {
+function OtpForm({ onLoginSuccess }) {
     const [otp_code, setOtp_code] = useState('');
     const [showErrorMessage, setErrorMessage] = useState(false);
 
@@ -20,8 +20,9 @@ function OtpForm() {
 
         login_otp(otp_code)
             .then(response => {
-                localStorage.setItem("otpToken", response["otp_token"]);
-                // HandleGetUsers();
+                localStorage.setItem("accessToken", response["access_token"]);
+                console.log(response["access_token"]);
+                onLoginSuccess();
             })
             .catch(error => {
                 console.log(error);

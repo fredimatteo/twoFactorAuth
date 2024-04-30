@@ -2,12 +2,14 @@ import React, {useState} from 'react';
 import './App.css';
 import LoginForm from './form/LoginForm';
 import OtpForm from "./form/OtpForm";
+import UserListView from "./view/Users";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(false);
     const [showSignupForm, setShowSignupForm] = useState(false);
     const [showHomeSection, setShowHomeSection] = useState(true);
     const [showOtpSection, setOtpSection] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
 
     const handleLoginClick = () => {
@@ -23,10 +25,14 @@ function App() {
     };
 
     const handleLoginSuccess = () => {
-        console.log("pippo");
         setShowLoginForm(false); // Nascondi il modulo di accesso
         setOtpSection(true); // Mostra il modulo OTP
     };
+
+    const handleOtpSuccess = () => {
+        setOtpSection(false);
+        setIsLoggedIn(true);// Mostra il modulo OTP
+};
 
     return (
         <div className="App">
@@ -40,7 +46,8 @@ function App() {
                 }
                 {showLoginForm && <LoginForm onLoginSuccess={handleLoginSuccess}/>}
                 {showSignupForm && <SignupForm/>}
-                {showOtpSection && <OtpForm/>}
+                {showOtpSection && <OtpForm onLoginSuccess={handleOtpSuccess}/>}
+                {isLoggedIn && <UserListView />}
             </header>
 
         </div>

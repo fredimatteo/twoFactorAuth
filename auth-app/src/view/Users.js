@@ -1,33 +1,61 @@
-const HandleGetUsers = () => {
-        const accessToken = localStorage.getItem("access_token");
+import React, {useState, useEffect} from 'react';
 
-        if (!accessToken) {
-            console.error('Access token non disponibile.');
-            return;
-        }
+const UserListView = () => {
+    const [userData, setUserData] = useState([]);
 
-        fetch('http://127.0.0.1:8000/users', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${accessToken}`,
-                'Accept': 'application/json'
+    useEffect(() => {
+        const fetchUserData = async () => {
+            try {
+                const token = localStorage.getItem('accessToken');
+                const response = await fetch('http://localhost:8000/users', {
+                    headers: {
+                        Authorization: `Bearer ${token}` // Includi il token nell'header Authorization
+                    }
+                });
+                if (!response.ok) {
+                    throw new Error('Errore durante il recupero dei dati');
+                }
+                const data = await response.json();
+                setUserData(data);
+            } catch (error) {
+                console.error(error);
             }
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Data:', data);
-            // Gestisci i dati ottenuti dalla richiesta
-        })
-        .catch(error => {
-            console.error('Error:', error.message);
-            // Gestisci gli errori
-        });
-    };
+        };
 
+        fetchUserData();
+    }, []);
 
-export default HandleGetUsers;
+    return (
+        <div>
+            <h1>Dettaglio Utente</h1>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cognome</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Amministratore</th>
+                    <th>Disabilitato</th>
+                </tr>
+                </thead>
+                <tbody>
+                {userData.map(user => (
+                    <tr key={user.id}>
+                        <td>{user.id}</td>
+                        <td>{user.first_name}</td>
+                        <td>{user.last_name}</td>
+                        <td>{user.email}</td>
+                        <td>{user.username}</td>
+                        <td>{user.is_admin ? 'Sì' : 'No'}</td>
+                        <td>{user.disabled ? 'Sì' : 'No'}</td>
+                    </tr>
+                ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default UserListView;
