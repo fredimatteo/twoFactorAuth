@@ -47,7 +47,7 @@ async function login_otp(otp_code) {
     const validation_token = localStorage.getItem("otpToken");
 
     try {
-        const response = await fetch('http://127.0.0.1:8000/auth/otp', {
+        const response = await fetch('https://twofactorauth-53av.onrender.com/auth/otp', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
