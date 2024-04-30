@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import './App.css';
-import LoginForm from './custom_js/LoginForm';
-import OtpForm from "./custom_js/OtpForm";
+import LoginForm from './form/LoginForm';
+import OtpForm from "./form/OtpForm";
 
 function App() {
     const [showLoginForm, setShowLoginForm] = useState(false);

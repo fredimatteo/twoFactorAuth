@@ -1,7 +1,7 @@
 // LoginForm.js
 
 import React, {useState} from 'react';
-import HandleGetUsers from './Users';
+import HandleGetUsers from '../view/Users';
 
 function LoginForm({ onLoginSuccess }) {
     const [username, setUsername] = useState('');

@@ -1,7 +1,7 @@
 // OtpForm.js
 
 import React, {useState} from 'react';
-import HandleGetUsers from './Users';
+import HandleGetUsers from '../view/Users';
 
 function OtpForm() {
     const [otp_code, setOtp_code] = useState('');
