@@ -20,6 +20,11 @@ class GenericException(Exception):
         self.message = message
 
 
+class BadRequestException(Exception):
+    def __init__(self, message: str):
+        self.message = message
+
+
 # pylint: disable=unused-argument
 def not_found_exception_handler(request: Request, exc: NotFoundException):
     return JSONResponse(
@@ -40,5 +45,13 @@ def invalid_credentials_exception_handler(request: Request, exc: InvalidCredenti
 def generic_exception_handler(request: Request, exc: GenericException):
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"message": exc.message}
+    )
+
+
+# pylint: disable=unused-argument
+def bad_request_exception_handler(request: Request, exc: BadRequestException):
+    return JSONResponse(
+        status_code=status.HTTP_400_BAD_REQUEST,
         content={"message": exc.message}
     )
