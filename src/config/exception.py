@@ -15,6 +15,11 @@ class InvalidCredentialsException(Exception):
         self.credential_type = credential_type
 
 
+class GenericException(Exception):
+    def __init__(self, message: str):
+        self.message = message
+
+
 # pylint: disable=unused-argument
 def not_found_exception_handler(request: Request, exc: NotFoundException):
     return JSONResponse(
@@ -28,4 +33,12 @@ def invalid_credentials_exception_handler(request: Request, exc: InvalidCredenti
     return JSONResponse(
         status_code=status.HTTP_401_UNAUTHORIZED,
         content={"message": f"Invalid {exc.credential_type}."},
+    )
+
+
+# pylint: disable=unused-argument
+def generic_exception_handler(request: Request, exc: GenericException):
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"message": exc.message}
     )
