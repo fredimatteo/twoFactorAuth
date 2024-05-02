@@ -48,7 +48,7 @@ function LoginForm({ onLoginSuccess }) {
 
 async function login(username, password) {
     try {
-        const response = await fetch('https://twofactorauth-53av.onrender.com/auth/login', {
+        const response = await fetch(process.env.REACT_APP_BASE_URL + '/auth/login', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

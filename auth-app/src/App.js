@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import './App.css';
 import LoginForm from './form/LoginForm';
 import OtpForm from "./form/OtpForm";
+import SignupForm from './form/SignUpForm';
 import UserListView from "./view/Users";
 
 function App() {
@@ -50,22 +51,6 @@ function App() {
                 {isLoggedIn && <UserListView />}
             </header>
 
-        </div>
-    );
-}
-
-function SignupForm() {
-    return (
-        <div>
-            <h2>Sign Up</h2>
-            <form>
-                <input type="text" placeholder="First Name"/>
-                <input type="text" placeholder="Last Name"/>
-                <input type="email" placeholder="Email"/>
-                <input type="text" placeholder="Username"/>
-                <input type="password" placeholder="Password"/>
-                <button type="submit" className="Button-signup">Sign Up</button>
-            </form>
         </div>
     );
 }
