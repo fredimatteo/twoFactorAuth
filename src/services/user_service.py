@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.config import exception
 from src.models import user_model as u_model
 from src.schemas import user_schema as u_schema
-from src.services.auth_service import hash_password
+from src.services import auth_service
 
 
 def get_all_users(db: Session, user: u_model.User, skip: int = 0, limit: int = 10):
@@ -37,7 +37,7 @@ def create_user(db: Session, user: u_schema.UserCreateSchema, otp_secret: str):
     user_obj = u_model.User(**user.model_dump())
 
     user_obj.salt = uuid.uuid4().hex
-    user_obj.password = hash_password(user_obj.password, user_obj.salt)
+    user_obj.password = auth_service.hash_password(user_obj.password, user_obj.salt)
     user_obj.otp_secret = otp_secret
 
     db.add(user_obj)
@@ -54,4 +54,5 @@ def update_user_otp_token(db: Session, otp_validation_token: str | None, user_id
         raise exception.NotFoundException(None)
 
     user.otp_validation_token = otp_validation_token
+
     db.add(user)

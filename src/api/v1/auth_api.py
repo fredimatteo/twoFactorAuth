@@ -20,9 +20,7 @@ def login(src: auth_schema.LoginRequest, db: Session = Depends(get_db)):
 
     db.commit()
 
-    qr_code = otp_service.generate_qr_code(user.otp_secret)
-
-    return auth_schema.LoginResponse(otp_token=validation_token, img=qr_code)
+    return auth_schema.LoginResponse(otp_validation_token=validation_token)
 
 
 @router.post("/otp", status_code=200)

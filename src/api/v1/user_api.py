@@ -1,28 +1,15 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Security
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
 from src.config import database
-from src.config.database import SessionLocal
+from src.config.middleware.auth_middleware import authenticate
 from src.models.user_model import User
 from src.schemas import user_schema
-from src.services import user_service, auth_service, otp_service
+from src.services import user_service, otp_service
 
 router = APIRouter(prefix="/users", tags=["users"])
-
-
-security = HTTPBearer()
-
-
-async def authenticate(credential: HTTPAuthorizationCredentials = Security(security)):
-    try:
-        db = SessionLocal()
-        user = auth_service.decode_token(credential.credentials, db)
-        return user
-    except Exception as e:
-        raise e
 
 
 @router.get("", response_model=List[user_schema.UserResponseSchema])
@@ -32,11 +19,13 @@ def get_users(db: Session = Depends(database.get_db), current_user: User = Depen
     return users
 
 
-@router.post("/create", status_code=201, response_model=user_schema.UserResponseSchema)
+@router.post("/create", status_code=201, response_model=user_schema.FirstLoginResponseSchema)
 def create_user(src: user_schema.UserCreateSchema, db: Session = Depends(database.get_db)):
     otp_secret = otp_service.generate_otp_secret()
     user = user_service.create_user(db=db, user=src, otp_secret=otp_secret)
 
     db.commit()
 
-    return user
+    qr_code = otp_service.generate_qr_code(otp_secret)
+
+    return user_schema.FirstLoginResponseSchema(qrcode_otp=qr_code, code_otp=otp_secret)

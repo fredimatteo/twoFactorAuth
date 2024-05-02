@@ -21,18 +21,22 @@ pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def authenticate(username: str, password: str, db: Session) -> user_model.User:
-    statement = select(user_model.User).where(user_model.User.username == username)
+    try:
+        statement = select(user_model.User).where(user_model.User.username == username)
 
-    result: user_model.User = db.execute(statement).scalar()
+        result: user_model.User = db.execute(statement).scalar()
 
-    if not result:
-        raise exception.InvalidCredentialsException("username")
+        if not result:
+            raise exception.InvalidCredentialsException("username")
 
-    if not verify_password(password, result.password, result.salt):
-        raise exception.InvalidCredentialsException("password")
+        if not verify_password(password, result.password, result.salt):
+            raise exception.InvalidCredentialsException("password")
 
-    return result
-
+        return result
+    except exception.InvalidCredentialsException as e:
+        raise exception.InvalidCredentialsException(e.credential_type) from e
+    except Exception as e:
+        raise exception.GenericException(message=str(e))
 
 def generate_token(src: user_model.User) -> TokenResponse:
     access_token = create_access_token(

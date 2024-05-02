@@ -10,8 +10,7 @@ class LoginRequest(BaseModel):
 
 
 class LoginResponse(BaseModel):
-    otp_token: str
-    img: str
+    otp_validation_token: str
 
     class Config:
         from_attributes = True
