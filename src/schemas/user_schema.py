@@ -43,3 +43,11 @@ class FirstLoginResponseSchema(BaseModel):
 
     class Config:
         from_attributes = True
+
+
+class VerifyEmailResponseSchema(BaseModel):
+    email: str
+    token: str
+
+    class Config:
+        from_attributes = True
