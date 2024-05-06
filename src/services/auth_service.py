@@ -17,7 +17,7 @@ ALGORITHM = "HS256"
 SECRET_KEY = st.jwt_secret_key
 ACCESS_TOKEN_EXPIRE_MINUTES = 15
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def authenticate(username: str, password: str, db: Session) -> user_model.User:
@@ -37,6 +37,7 @@ def authenticate(username: str, password: str, db: Session) -> user_model.User:
         raise exception.InvalidCredentialsException(e.credential_type) from e
     except Exception as e:
         raise exception.GenericException(message=str(e))
+
 
 def generate_token(src: user_model.User) -> TokenResponse:
     access_token = create_access_token(
