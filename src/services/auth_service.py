@@ -1,3 +1,5 @@
+import hashlib
+import secrets
 from datetime import datetime, timedelta, timezone
 
 from jose import JWTError, jwt
@@ -31,6 +33,9 @@ def authenticate(username: str, password: str, db: Session) -> user_model.User:
 
         if not verify_password(password, result.password, result.salt):
             raise exception.InvalidCredentialsException("password")
+
+        if result.disabled:
+            raise exception.InvalidCredentialsException("disabled")
 
         return result
     except exception.InvalidCredentialsException as e:
@@ -81,3 +86,16 @@ def create_access_token(data: dict, expires_delta: timedelta | None = None):
     to_encode.update({"exp": expire})
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
+
+
+def generate_temporary_token():
+    random_value = secrets.token_urlsafe(16)
+
+    timestamp = str(datetime.now(timezone.utc) + timedelta(minutes=15))
+
+    token_data = random_value + timestamp
+
+    hash_object = hashlib.sha256(token_data.encode())
+    token_hash = hash_object.hexdigest()
+
+    return token_hash
