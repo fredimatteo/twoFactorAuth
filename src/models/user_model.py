@@ -16,8 +16,9 @@ class User(Base):
     salt = mapped_column(String(255), nullable=False)
     disabled = mapped_column(Boolean, default=False)
     is_admin = mapped_column(Boolean, default=False)
-    otp_validation_token = mapped_column(String(255), nullable=False, unique=True)
+    otp_validation_token = mapped_column(String(255), nullable=False)
     otp_secret = mapped_column(String(255), nullable=True, unique=True)
+    mail_validation_token = mapped_column(String(255), nullable=False)
     created_at = mapped_column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
     updated_at = mapped_column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
 
@@ -25,5 +26,7 @@ class User(Base):
         PrimaryKeyConstraint('id', name='user_pkey'),
         UniqueConstraint('email', name='user_email_key'),
         UniqueConstraint('salt', name='user_salt_key'),
-        UniqueConstraint('username', name='user_username_key')
+        UniqueConstraint('username', name='user_username_key'),
+        UniqueConstraint('mail_validation_token', name='mail_validation_token_key'),
+        UniqueConstraint('otp_validation_token', name='otp_validation_token_key'),
     )
