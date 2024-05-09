@@ -14,7 +14,7 @@ class UserSchema(BaseModel):
 
 
 class UserResponseSchema(BaseModel):
-    id: int | None = None
+    id: int
     first_name: str
     last_name: str
     email: str
@@ -32,6 +32,22 @@ class UserCreateSchema(BaseModel):
     email: str
     password: str
     username: str
+
+    class Config:
+        from_attributes = True
+
+
+class FirstLoginResponseSchema(BaseModel):
+    qrcode_otp: str
+    code_otp: str
+
+    class Config:
+        from_attributes = True
+
+
+class VerifyEmailResponseSchema(BaseModel):
+    email: str
+    token: str
 
     class Config:
         from_attributes = True

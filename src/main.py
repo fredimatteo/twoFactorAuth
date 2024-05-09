@@ -13,6 +13,8 @@ app = FastAPI(
 
 app.add_exception_handler(exception.NotFoundException, exception.not_found_exception_handler)
 app.add_exception_handler(exception.InvalidCredentialsException, exception.invalid_credentials_exception_handler)
+app.add_exception_handler(exception.GenericException, exception.generic_exception_handler)
+app.add_exception_handler(exception.BadRequestException, exception.bad_request_exception_handler)
 
 origins = [
     "localhost:3000"

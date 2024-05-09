@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from src.config import exception
 from src.models import user_model as u_model
 from src.schemas import user_schema as u_schema
-from src.services.auth_service import hash_password
+from src.services import auth_service
 
 
 def get_all_users(db: Session, user: u_model.User, skip: int = 0, limit: int = 10):
@@ -33,12 +33,23 @@ def get_user_by_otp_validation_token(db: Session, validation_token: str) -> u_mo
     return user
 
 
-def create_user(db: Session, user: u_schema.UserCreateSchema, otp_secret: str):
+def get_user_by_email_validation_token(db: Session, validation_token: str) -> u_model.User:
+    select_query = select(u_model.User).where(u_model.User.mail_validation_token == validation_token)
+
+    user = db.execute(select_query).scalars().first()
+
+    if user is None:
+        raise exception.NotFoundException("with provided mail validation token")
+
+    return user
+
+
+def create_user(db: Session, user: u_schema.UserCreateSchema):
     user_obj = u_model.User(**user.model_dump())
 
     user_obj.salt = uuid.uuid4().hex
-    user_obj.password = hash_password(user_obj.password, user_obj.salt)
-    user_obj.otp_secret = otp_secret
+    user_obj.password = auth_service.hash_password(user_obj.password, user_obj.salt)
+    user_obj.disabled = True
 
     db.add(user_obj)
 
@@ -54,4 +65,5 @@ def update_user_otp_token(db: Session, otp_validation_token: str | None, user_id
         raise exception.NotFoundException(None)
 
     user.otp_validation_token = otp_validation_token
+
     db.add(user)
