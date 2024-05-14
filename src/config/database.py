@@ -17,6 +17,10 @@ Base = declarative_base()
 
 
 def get_db():
+    """
+    Get a SQLAlchemy database session
+    :return:
+    """
     db = SessionLocal()
     try:
         yield db
@@ -26,14 +30,18 @@ def get_db():
         db.close()
 
 
-def healthcheck() -> str:
+def healthcheck() -> int:
+    """
+    Health check function which checks if the database is ready for use.
+    :return: 1 if healthy else 0
+    """
     db = SessionLocal()
     try:
         # Try to create a session and execute a simple query
         db.execute(text("SELECT 1"))
-        return "Ok"
+        return 1
     except alchemy_exceptions.OperationalError:
         # If there's an error connecting to the database, return False
-        return "Offline"
+        return 0
     finally:
         db.close()
