@@ -64,7 +64,7 @@ def update_user_otp_token(db: Session, otp_validation_token: str | None, user_id
     user = db.execute(select_query).scalars().first()
 
     if user is None:
-        raise exception.NotFoundException(None)
+        raise NotFoundException(None)
 
     user.otp_validation_token = otp_validation_token
 

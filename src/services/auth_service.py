@@ -1,4 +1,3 @@
-import hashlib
 import secrets
 from datetime import datetime, timedelta, timezone
 
@@ -23,6 +22,13 @@ pwd_context = CryptContext(schemes=["argon2"], deprecated="auto")
 
 
 def authenticate(username: str, password: str, db: Session) -> user_model.User:
+    """
+    Authenticate a user with given credentials.
+    :param username: User's username.
+    :param password: User's password.
+    :param db: Sqlalchemy session.
+    :return: user model.
+    """
     statement = select(user_model.User).where(user_model.User.username == username)
     result: user_model.User = db.execute(statement).scalar()
 
@@ -39,6 +45,11 @@ def authenticate(username: str, password: str, db: Session) -> user_model.User:
 
 
 def generate_token(src: user_model.User) -> TokenResponse:
+    """
+    Generate TokenResponse for given user.
+    :param src: User model.
+    :return: A TokenResponse object.
+    """
     access_token = create_access_token(
         {
             "sub": src.username,

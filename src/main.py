@@ -17,7 +17,7 @@ app.add_exception_handler(exception.GenericException, exception.generic_exceptio
 app.add_exception_handler(exception.BadRequestException, exception.bad_request_exception_handler)
 
 origins = [
-    "localhost:3000"
+    "*"
 ]
 
 app.add_middleware(
@@ -37,7 +37,7 @@ def root():
 @app.get("/healthcheck")
 def healthcheck():
     return {
-        "app_status": "Ok",
+        "app_status": 1,
         "db_status": database.healthcheck(),
     }
 
