@@ -6,7 +6,7 @@ services:
     build:
       context: ../../
       dockerfile: deployment/docker/Backend.Dockerfile
-    command: ["python3", "backend_runner.py"]
+    command: sh -c "alembic upgrade head && python3 backend_runner.py"
     environment:
       DB_HOST: database
       DB_PORT: 5432
@@ -14,6 +14,7 @@ services:
       - "8000:8000"
     depends_on:
       - database
+    restart: on-failure
 
   database:
     container_name: "database"
