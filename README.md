@@ -38,7 +38,3 @@ The application flow of Two-Factor Authentication (2FA) follows these steps:
 
 4. **Verify OTP**:
    - API POST `/auth/otp/verify` is used to validate the OTP and return an access token and a refresh token.
-
-
-
-
