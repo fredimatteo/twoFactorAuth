@@ -1,5 +1,9 @@
+import logging
+
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
+
+logger = logging.getLogger(__name__)
 
 
 class NotFoundException(Exception):
@@ -27,6 +31,7 @@ class BadRequestException(Exception):
 
 # pylint: disable=unused-argument
 def not_found_exception_handler(request: Request, exc: NotFoundException):
+    logger.error(exc.message)
     return JSONResponse(
         status_code=status.HTTP_404_NOT_FOUND,
         content={"message": exc.message}
@@ -43,14 +48,16 @@ def invalid_credentials_exception_handler(request: Request, exc: InvalidCredenti
 
 # pylint: disable=unused-argument
 def generic_exception_handler(request: Request, exc: GenericException):
+    logger.error("an error occurred: %s", exc.message)
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-        content={"message": exc.message}
+        content={"message": "An unknown error occurred."}
     )
 
 
 # pylint: disable=unused-argument
 def bad_request_exception_handler(request: Request, exc: BadRequestException):
+    logger.error("an error occurred: %s", exc.message)
     return JSONResponse(
         status_code=status.HTTP_400_BAD_REQUEST,
         content={"message": exc.message}
