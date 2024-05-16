@@ -7,7 +7,7 @@ from src.config.database import Base
 
 class User(Base):
     __tablename__ = 'user'
-    id = mapped_column(BigInteger)
+    id = mapped_column(BigInteger, autoincrement=True)
     first_name = mapped_column(String(48), nullable=False)
     last_name = mapped_column(String(72), nullable=False)
     email = mapped_column(String(255), nullable=False)
@@ -16,9 +16,9 @@ class User(Base):
     salt = mapped_column(String(255), nullable=False)
     disabled = mapped_column(Boolean, default=False)
     is_admin = mapped_column(Boolean, default=False)
-    otp_validation_token = mapped_column(String(255), nullable=False)
+    otp_validation_token = mapped_column(String(255), nullable=True)
     otp_secret = mapped_column(String(255), nullable=True, unique=True)
-    mail_validation_token = mapped_column(String(255), nullable=False)
+    mail_validation_token = mapped_column(String(255), nullable=True)
     created_at = mapped_column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
     updated_at = mapped_column(DateTime, nullable=False, server_default=text('CURRENT_TIMESTAMP'))
 
