@@ -1,6 +1,9 @@
 .PHONY: docker-up
 
 docker-up:
+	cd deployment/docker && docker-compose up -d
+
+docker-build-up:
 	cd deployment/docker && docker-compose up -d --build
 
 docker-down:
